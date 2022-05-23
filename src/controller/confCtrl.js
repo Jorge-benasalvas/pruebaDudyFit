@@ -35,6 +35,7 @@ const confCtrl = {
   },
 
   getTrainers(data) {
+    
     const numTrainers = { trainers: [] };
     for (let cont = 1; Object.keys(data).length / 3 >= cont; cont += 1) {
       const obj = {
@@ -45,12 +46,14 @@ const confCtrl = {
       };
       numTrainers.trainers.push(obj);
     }
+    
 
     return numTrainers;
   },
 
   async getDatos(data) {
     try {
+     
       let newTrainers = JSON.parse(JSON.stringify(trainersData));
       if (Object.keys(data).length > 0) {
         newTrainers = await this.getTrainers(data);
@@ -82,7 +85,7 @@ const confCtrl = {
         orderClients.splice(0, trainer.available);
       }
       totalSatisfac /= totalClients;
-
+      
       return { orderTrainers, totalSatisfac };
     } catch (e) {
       throw e;
