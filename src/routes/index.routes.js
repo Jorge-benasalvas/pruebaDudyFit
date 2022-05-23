@@ -12,11 +12,23 @@ router.get('/conf', async (req, res) => {
 router.post('/result', async (req, res) => {
   try {
     const resultado = await confCtrl.getDatos(req.body);
-    console.log(resultado);
     res.render('../views/results.ejs', { resultado: resultado.orderTrainers, totalSatisfac: resultado.totalSatisfac });
   } catch (e) {
     console.log(e);
   }
+});
+
+router.get('/result', async (req, res) => {
+  try {
+    const resultado = await confCtrl.getDatos([]);
+    res.render('../views/results.ejs', { resultado: resultado.orderTrainers, totalSatisfac: resultado.totalSatisfac });
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+router.get('/', (req, res) => {
+  res.render('../views/home.ejs');
 });
 
 module.exports = router;
