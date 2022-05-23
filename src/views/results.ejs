@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>Configuración</title>
+    <%- include('head'); %>
+  </head>
+  <body>
+    <% const value = ((totalSatisfac/5)*100).toFixed() %>
+    <div class="container">
+      <div class="mx-auto pt-5">
+        <h2 class="text-center">Pantalla de resultados</h2>
+      </div>
+      <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button
+            class="nav-link active"
+            id="nav-trainers-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#nav-trainers"
+            type="button"
+            role="tab"
+            aria-controls="nav-trainers"
+            aria-selected="true"
+          >
+            Entrenadores
+          </button>
+          <button
+            class="nav-link"
+            id="nav-value-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#nav-value"
+            type="button"
+            role="tab"
+            aria-controls="nav-value"
+            aria-selected="false"
+          >
+            Valoración del conjunto
+          </button>
+        </div>
+      </nav>
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-trainers" role="tabpanel" aria-labelledby="nav-trainers-tab" tabindex="0">
+          <div class="row">
+            <% for(let trainer of resultado){ %>
+            <div class="col-md-4 pt-5">
+              <div class="card min-height">
+                <div class="card-header">
+                  <div class="row">
+                    <div class="col-lg-10 col-md-9 col-sm-9 col-xs-9"><h5>Entrenador <%- trainer.id %></h5></div>
+                    <div class="col-lg-2 col-md-3 col-sm-3 col-xs-3">
+                      <button
+                        type="button"
+                        class="btn btn-secondary btn-circle"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        data-bs-html="true"
+                        title="<b>Valoración:</b> <%- trainer.reputation %> <br> <b>Max Clientes:</b> <%- trainer.available %>  "
+                      >
+                        i
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4">
+                        <img
+                          src="https://res.cloudinary.com/difhe4gl3/image/upload/v1609490513/Trainer_kiekjf.jpg"
+                          class="rounded-circle mr-10"
+                          style="width: 50px; margin-right: 10px"
+                          alt="photo of the trainer"
+                        />
+                      </div>
+                      <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8">
+                        <div class="card-title"><h5><%- trainer.name %></h5></div>
+                        <div class="card-text">
+                          <p>Clientes Asignados</p>
+                          <% for(let cliente of trainer.clients){ %>
+                          <p class="mb-0">- Cliente "<%- cliente.name %> "</p>
+                          <% } %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer"><%- trainer.clients.length %> Clientes Asignados</div>
+              </div>
+            </div>
+            <% } %>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="nav-value" role="tabpanel" aria-labelledby="nav-value-tab" tabindex="0">
+          <div class="row">
+            <div class="col-md-12 mt-5 mb-2">
+              <h4 class="text-center">Rango de satisfacción de los clientes es de: <%- totalSatisfac %></h4>
+            </div>
+            <div class="progress">
+              <div
+                class="progress-bar bg-success"
+                role="progressbar"
+                style="width: <%- value %>%"
+                aria-valuenow="<%- value  %>"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                <%- totalSatisfac %>
+              </div>
+            </div>
+            <div class="col-md-12 mt-5">
+              <h4 class="text-center">Realización del cálculo</h4>
+              <p>
+                Basándonos en los datos que se han facilitado para este ejercicio, cada Entrenador tiene un índice de reputación <b>IR</b> con valores
+                entre 0 y 5, y cada cliente tiene un valor de la importancia que le da a la reputación del entrenador <b>IRE</b> con unos valores de 0 a
+                10.
+              </p>
+              <p>La obtención del índice de satisfacción del conjunto se ha realizado de la siguiente manera:</p>
+              <ul>
+                  <li>
+                      <p>
+                          En primer lugar se ordenan los clientes de mayor a menor IRE y entrenadores de mayor a menor IR.
+                      </p>
+                  </li>
+                <li>
+                  <p>
+                    En segundo lugar necesitamos obtener el índice de satisfacción individual, para ello se ha desarrollado una función a la que se le
+                    pasan los siguientes parametros: 
+                    <ul>
+                    <li>La reputación del entrenador (reputation).</li>
+                    <li>La reputación mínima que requiere el
+                    cliente (trainerRep).</li>
+                    </ul>
+                    <br>
+                   <p> Primero se divide IRE entre 2 para reescalar los valores. Después se calcula la diferencia entre ambos valores (IRE - IR). Se obtiene un valor y se le asigna una puntuación entre 0 y 5 siendo este el más alto.</p>
+                    <p> A continuación se detalla la lógica seguida:</p>
+                    
+                    <ul>
+                        <li>
+                            Diferencia menor o igual a 0.2 => 5 puntos.
+                        </li>
+                        <li>
+                            Diferencia mayor que 0.2 y menor o igual a 0.4 => 4 puntos.
+                        </li>
+                        <li>
+                            Diferencia mayor que 0.4 y menor o igual a 0.6 => 3 puntos.
+                        </li>
+                        <li>
+                            Diferencia mayor que 0.6 y menor o igual a 0.8 => 2 puntos.
+                        </li>
+                        <li>
+                             Diferencia mayor que 0.8 y menor a 1 => 1 punto.
+                        </li>
+                        <li>
+                            Diferencia mayor o igual que 1 => 0 puntos.
+                        </li>
+                    </ul>
+
+                  </p> 
+                  
+                </li>
+                <li>
+                    <p>
+                      En tercer lugar se crea un objeto cliente con lo siguientes atributos: name, id, satisfac (Índice de satisfacción individual). Seguidamente se añade el objeto cliente a un array de clientes en el objeto trainer.
+                  </p> 
+                </li>
+                <li>En cuarto lugar se calcula el índice total de satisfacción, diviendo la suma de todos los índices de satisfacción individual entre el número de clientes.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+      const tooltipList = [...tooltipTriggerList].map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
+    </script>
+  </body>
+</html>
+
